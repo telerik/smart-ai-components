@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TelerikBlazorSmartAIComponents", "TelerikBlazorSmartAIComponents\TelerikBlazorSmartAIComponents.csproj", "{CA6EF5FA-5CFA-4F71-94F8-566EDDD40072}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TelerikBlazorSmartAIComponents.Client", "TelerikBlazorSmartAIComponents.Client\TelerikBlazorSmartAIComponents.Client.csproj", "{2F5F5386-2B5E-4498-B481-87D75F12622D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CA6EF5FA-5CFA-4F71-94F8-566EDDD40072}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA6EF5FA-5CFA-4F71-94F8-566EDDD40072}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA6EF5FA-5CFA-4F71-94F8-566EDDD40072}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA6EF5FA-5CFA-4F71-94F8-566EDDD40072}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F5F5386-2B5E-4498-B481-87D75F12622D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F5F5386-2B5E-4498-B481-87D75F12622D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F5F5386-2B5E-4498-B481-87D75F12622D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F5F5386-2B5E-4498-B481-87D75F12622D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EC5455CA-A9B8-4F3C-8FB6-724AD13CEFFB}
+	EndGlobalSection
+EndGlobal

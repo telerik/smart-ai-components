@@ -1,0 +1,159 @@
+﻿@page "/pdfviewer-smart-ai-assistant"
+
+@using Azure
+@using Azure.AI.OpenAI
+@using SmartComponents.LocalEmbeddings
+@using Telerik.DataSource
+@using TelerikBlazorSmartAIComponents.Client
+@using TelerikBlazorSmartAIComponents.Client.Models
+@using TelerikBlazorSmartAIComponents.Client.Services
+
+<PageTitle>PdfViewer Smart AI Assistant Demo</PageTitle>
+
+@inject IJSRuntime jsRuntime
+
+<div class="demo-alert demo-alert-info">
+    <p>To run the demo configure your AI API credentials inside <code>CallOpenAIApi()</code> method.</p>
+</div>
+
+<TelerikPdfViewer @ref="@PdfViewerRef"
+                  Width="100%"
+                  Height="800px"
+                  Data="@FileData">
+    <PdfViewerToolBar>
+        <PdfViewerToolBarCustomTool>
+            <TelerikButton Id="ai-button" OnClick="@ToggleAIPrompt" Icon="SvgIcon.Sparkles">AI Assistant</TelerikButton>
+            <TelerikPopup @ref="@PopupRef"
+                          AnimationDuration="300"
+                          AnimationType="@AnimationType.SlideUp"
+                          AnchorHorizontalAlign="@PopupAnchorHorizontalAlign.Left"
+                          AnchorVerticalAlign="@PopupAnchorVerticalAlign.Bottom"
+                          AnchorSelector="#ai-button"
+                          HorizontalAlign="@PopupHorizontalAlign.Left"
+                          VerticalAlign="@PopupVerticalAlign.Top"
+                          Class="ai-prompt-popup"
+                          Width="420px"
+                          Height="400px">
+                <TelerikAIPrompt OnPromptRequest="@HandlePromptRequest"
+                                 PromptSuggestions="@PromptSuggestions">
+                </TelerikAIPrompt>
+            </TelerikPopup>
+        </PdfViewerToolBarCustomTool>
+    </PdfViewerToolBar>
+</TelerikPdfViewer>
+
+@code {
+    // To run the demo, just place your OpenAI credentials and set IsDemo to false
+    public TelerikPdfViewer PdfViewerRef { get; set; }
+    public byte[] FileData { get; set; }
+    public List<string> PromptSuggestions { get; set; }
+    public bool IsAIPromptPopupVisible { get; set; }
+    public TelerikPopup PopupRef { get; set; }
+    public Dictionary<string, EmbeddingF32> PageEmbeddings { get; set; }
+
+    public string AllTextContent { get; set; }
+
+    private void ToggleAIPrompt()
+    {
+        if (IsAIPromptPopupVisible)
+        {
+            PopupRef.Hide();
+        }
+        else
+        {
+            PopupRef.Show();
+        }
+
+        IsAIPromptPopupVisible = !IsAIPromptPopupVisible;
+    }
+
+    private async Task HandlePromptRequest(AIPromptPromptRequestEventArgs args)
+    {
+        var prompt = args.Prompt;
+        var answer = await AnswerQuestion(prompt);
+        args.Output = answer;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var fileBytes = Convert.FromBase64String(PdfViewerConstants.SampleFileBase64);
+
+        FileData = fileBytes;
+
+        await base.OnInitializedAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // ensure the document is loaded
+        await Task.Delay(1000);
+
+        AllTextContent = await jsRuntime.InvokeAsync<string>("getLoadedDocumentText");
+        if (firstRender)
+        {
+            var chunks = AllTextContent.Split("--- NEW PAGE ---", StringSplitOptions.RemoveEmptyEntries);
+
+            var embedder = new LocalEmbedder();
+            PageEmbeddings = chunks.Select(x => KeyValuePair.Create(x, embedder.Embed(x))).ToDictionary(k => k.Key, v => v.Value);
+            var questionsJson = await CallOpenAIApi(
+                                                @"You are a helpful assistant. Your task is to analyze the provided text and generate 3 short diverse questions.
+            The qustions should be returned in form of a string array in a valid JSON format. Return only the JSON and nothing else.",
+                AllTextContent);
+
+            PromptSuggestions = System.Text.Json.JsonSerializer.Deserialize<List<string>>(questionsJson);
+            PopupRef.Refresh();
+            StateHasChanged();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task<string> AnswerQuestion(string question)
+    {
+        var embedder = new LocalEmbedder();
+        var questionEmbedding = embedder.Embed(question);
+        var results = LocalEmbedder.FindClosest(questionEmbedding, PageEmbeddings.Select(x => (x.Key, x.Value)), 2);
+
+        var answer = await CallOpenAIApi("You are a helpful assistant. Use the provided context to answer the user question. Context: " + string.Join(" --- ", results), question);
+
+        return answer;
+    }
+
+    private async Task<string> CallOpenAIApi(string systemPrompt, string message)
+    {
+        var client = new OpenAIClient(
+         new Uri("AZURE_ENDPOINT"),
+         new AzureKeyCredential("PUT_YOUR_API_KEY_HERE"));
+
+        var chatCompletionsOptions = new ChatCompletionsOptions()
+            {
+                DeploymentName = "DEPLOYMENT_NAME",
+                Messages =
+            {
+                new ChatRequestSystemMessage(systemPrompt),
+                new ChatRequestUserMessage(message),
+            }
+        };
+
+        Response<ChatCompletions> response = await client.GetChatCompletionsAsync(chatCompletionsOptions);
+        ChatResponseMessage responseMessage = response.Value.Choices[0].Message;
+
+        return responseMessage.Content;
+    }
+}
+
+<script suppress-error="BL9992">
+    window.getLoadedDocumentText = async () => {
+        let pdfInstances = Object.fromEntries(Object.entries(TelerikBlazor._instances).filter(([key, value]) => value.element && value.element.classList.contains("k-pdf-viewer")));
+        let pdfInstance = pdfInstances[Object.keys(pdfInstances)[0]]
+        let document = pdfInstance.widget.state.pdfDocument;
+        let allPages = document.numPages
+        let allData = '';
+        for (let i = 1; i <= document.numPages; i++) {
+            var pageContent = (await (await document.getPage(i)).getTextContent()).items.map(token => token.str).join('')
+            allData += "--- NEW PAGE ---" + pageContent;
+        }
+
+        return allData;
+    }
+</script>

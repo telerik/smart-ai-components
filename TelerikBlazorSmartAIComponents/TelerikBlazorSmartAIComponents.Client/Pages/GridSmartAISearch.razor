@@ -1,0 +1,129 @@
+﻿@page "/grid-smart-ai-search"
+
+@using SmartComponents.LocalEmbeddings
+@using Telerik.DataSource
+@using TelerikBlazorSmartAIComponents.Client.Models
+@using TelerikBlazorSmartAIComponents.Client.Services
+
+<PageTitle>Grid Smart AI Search Demo</PageTitle>
+
+@inject CategoryService categoryService
+
+<div class="demo-alert demo-alert-info">
+    <p>Try typing <strong>"milk"</strong>, <strong>"oatmeal"</strong>, or <strong>"cake"</strong> in the search box and click "Search" to see how our smart search works in action!</p>
+</div>
+
+<TelerikGrid @ref="@GridRef"
+             Data=@GridData
+             Height="400px"
+             Pageable=true>
+    <GridToolBarTemplate>
+        Smart Search<TelerikTextBox @bind-Value="@FilterValue">
+        </TelerikTextBox>
+        <TelerikButton OnClick="@Search" Icon="@SvgIcon.Search">Search</TelerikButton>
+    </GridToolBarTemplate>
+    <GridColumns>
+        <GridColumn Field=@nameof(CategoryDto.CategoryId) />
+        <GridColumn Field=@nameof(CategoryDto.CategoryName) />
+        <GridColumn Field=@nameof(CategoryDto.Description) />
+    </GridColumns>
+</TelerikGrid>
+
+@code {
+    private string FilterValue { get; set; }
+
+    public TelerikGrid<CategoryDto> GridRef { get; set; }
+
+    public IEnumerable<CategoryDto> GridData { get; set; }
+
+    public Dictionary<int, EmbeddingF32> CategoryEmbeddings { get; set; } = new Dictionary<int, EmbeddingF32>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        GridData = await categoryService.GetCategories();
+
+        using var embedder = new LocalEmbedder();
+        foreach (var category in GridData)
+        {
+            CategoryEmbeddings.Add(category.CategoryId, embedder.Embed($"{category.Description} {category.CategoryName}"));
+        }
+    }
+
+    private async Task Search()
+    {
+        if (string.IsNullOrEmpty(FilterValue))
+        {
+            await SetSearchState(new FilterDescriptor());
+            return;
+        }
+
+
+        var searchResults = Search(FilterValue);
+        Console.WriteLine("results count: " + searchResults.Count);
+        var descriptor = CreateSearchFilter(searchResults, nameof(CategoryDto.CategoryName));
+
+
+        await SetSearchState(descriptor);
+    }
+
+    private async Task SetSearchState(IFilterDescriptor descriptor)
+    {
+        GridState<CategoryDto> state = new GridState<CategoryDto>()
+            {
+                FilterDescriptors = new List<IFilterDescriptor> { descriptor }
+            };
+
+        await GridRef?.SetStateAsync(state);
+    }
+
+    private IFilterDescriptor CreateSearchFilter(List<CategoryDto> categoryFilters, string field)
+    {
+        var descriptor = new CompositeFilterDescriptor();
+        descriptor.LogicalOperator = FilterCompositionLogicalOperator.Or;
+
+        if (categoryFilters.Any())
+        {
+            foreach (var category in categoryFilters)
+            {
+                var filter = new FilterDescriptor(field, FilterOperator.Contains, category.CategoryName);
+                filter.MemberType = typeof(string);
+                descriptor.FilterDescriptors.Add(filter);
+            }
+        }
+        else
+        {
+            var filter = new FilterDescriptor(field, FilterOperator.Contains, Guid.NewGuid().ToString());
+            filter.MemberType = typeof(string);
+            descriptor.FilterDescriptors.Add(filter);
+
+        }
+
+        return descriptor;
+    }
+
+    public List<CategoryDto> Search(string query)
+    {
+        using var embedder = new LocalEmbedder();
+        var queryVector = embedder.Embed(query);
+
+        // Uncomment this to see each the similarity numbers of each of your items. This may help you to fine-tune the threashhold number.
+        // foreach (var item in GridData)
+        // {
+        //     var embeddings = CategoryEmbeddings[item.CategoryId];
+        //     var similarity = LocalEmbedder.Similarity(embeddings, queryVector);
+        //     Console.WriteLine(item.Description + " is " + similarity + " similar to the query: " + query);
+        // }
+
+        // Threshold is illustrative
+        // You may need to customize it depening on the data and the use-case
+        return GridData.Where(p => LocalEmbedder.Similarity(CategoryEmbeddings[p.CategoryId], queryVector) > 0.65)
+                        .ToList();
+    }
+}
+
+<style>
+    .demo-alert.demo-alert-info {
+        margin: 5px auto 10px;
+        padding: 10px 20px;
+    }
+</style>

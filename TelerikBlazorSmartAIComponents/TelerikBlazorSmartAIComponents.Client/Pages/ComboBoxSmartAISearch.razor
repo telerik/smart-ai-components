@@ -1,0 +1,73 @@
+﻿@page "/combobox-smart-ai-search"
+
+@using SmartComponents.LocalEmbeddings
+@using TelerikBlazorSmartAIComponents.Client.Models
+@using TelerikBlazorSmartAIComponents.Client.Services
+
+<PageTitle>ComboBox Smart AI Search Demo</PageTitle>
+
+@inject ProductService service
+
+<div class="demo-alert demo-alert-info">
+    <p>Try typing <strong>"pasta"</strong>, <strong>"sausage"</strong>, or <strong>"fruit"</strong> in the combobox to see how our smart search works in action!</p>
+</div>
+
+<TelerikComboBox @bind-Value="@Value"
+                 TItem="@ProductDto" TValue="@(int)"
+                 OnRead="@ReadItems"
+                 Placeholder="Select a product"
+                 ValueField="ProductId"
+                 TextField="ProductName"
+                 Filterable="true">
+</TelerikComboBox>
+
+@code {
+    private int Value { get; set; }
+
+    public IEnumerable<ProductDto> AllData { get; set; }
+
+    public Dictionary<int, EmbeddingF32> ProductEmbeddings { get; set; } = new Dictionary<int, EmbeddingF32>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        AllData = await service.GetProducts();
+
+        using var embedder = new LocalEmbedder();
+        foreach (var product in AllData)
+        {
+            ProductEmbeddings.Add(product.ProductId, embedder.Embed(product.ProductName + " " + product.CategoryName));
+        }
+    }
+
+    protected void ReadItems(ComboBoxReadEventArgs args)
+    {
+        if (args.Request.Filters.Count > 0) // wait for user input to load data
+        {
+            Telerik.DataSource.FilterDescriptor filter = args.Request.Filters[0] as Telerik.DataSource.FilterDescriptor;
+            string userInput = filter.Value.ToString();
+
+            var searchResults = Search(userInput);
+
+            args.Data = searchResults;
+        }
+        else
+        {
+            args.Data = AllData;
+        }
+    }
+
+    public List<ProductDto> Search(string query)
+    {
+        using var embedder = new LocalEmbedder();
+        var queryVector = embedder.Embed(query);
+
+        // foreach (var item in AllData)
+        // {
+        //     var embeddings = ProductEmbeddings[item.ProductId];
+        //     var similarity = LocalEmbedder.Similarity(embeddings, queryVector);
+        //     Console.WriteLine(item.ProductName + " is " + similarity + " similar to the query: " + query);
+        // }
+
+        return AllData.Where(p => LocalEmbedder.Similarity(ProductEmbeddings[p.ProductId], queryVector) > 0.65).ToList();
+    }
+}
