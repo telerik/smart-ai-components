@@ -27,7 +27,7 @@ You can also check out our demos on telerik.com:
 ## Contribution
 Issues and Pull Requests are welcome.
 
-To submit a pull request, you should first fork the [repo](https://github.com/dotnet-smartcomponents/smartcomponents).
+To submit a pull request, you should first fork the [repo](https://github.com/telerik/telerik-smartai-components).
 
 ## Licensing
 Telerik is a commercial UI library. To use the components, you need to either register for a free trial or purchase a license.
