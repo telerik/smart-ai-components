@@ -21,11 +21,14 @@ namespace SmartSpreadsheet
         public class AIFunction : StringsInFunction
         {
             public Dictionary<string, EmbeddingF32> PageEmbeddings { get; set; }
+
             public string AllTextContent { get; set; }
+
             ///<summary>
             /// The name of the function.
             ///</summary>
             public static readonly string FunctionName = "AI";
+
             private static readonly FunctionInfo Info;
 
             /// <summary>
@@ -53,6 +56,7 @@ namespace SmartSpreadsheet
                     return Info;
                 }
             }
+
             public AIFunction()
             {
 
