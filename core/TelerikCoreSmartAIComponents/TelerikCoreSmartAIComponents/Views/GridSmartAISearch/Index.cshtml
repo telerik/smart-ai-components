@@ -1,0 +1,66 @@
+﻿
+<div class='note' style="text-align: center;">
+    <p>Try typing <strong>"milk"</strong>, <strong>"oatmeal"</strong>, or <strong>"cake"</strong> in the search box and press "Enter" to see how our smart search works in action!</p>
+</div>
+
+@(Html.Kendo().Grid<Category>()
+    .Name("grid")
+   .ToolBar(toolbar =>
+   {
+       toolbar.Custom().ClientTemplate(
+           Html.Kendo()
+                .Template()
+                .AddComponent(c => c.TextBox()
+                                    .Name("search")
+                                    .Placeholder("Smart Search")
+                                    .HtmlAttributes(new { width = "250px", onkeydown = "searchBoxKeyDown(event)" }))
+       );
+   })
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.CategoryId).Filterable(false).Width(100);
+        columns.Bound(p => p.CategoryName);
+        columns.Bound(p => p.Description);
+    })
+    .Pageable()
+    .Sortable()
+    .Scrollable()
+    .HtmlAttributes(new { style = "height:430px;" })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(20)
+        .Read(read => read.Action("Read", "GridSmartAISearch").Data("filterQuery"))
+        )
+)
+
+@section scripts {
+    <script>
+        function searchBoxKeyDown(e) {
+            if (e.keyCode != 13) {
+                return;
+            }
+
+            var grid = $("#grid").data('kendoGrid');
+            grid.dataSource.read();
+        }
+
+        function filterQuery(e) {
+            return {
+                filterQuery: $("#search").val()
+            }
+        }
+    </script>
+}
+
+<style>
+    .note {
+        font: normal 18px "Metric";
+        border-radius: 2px;
+        margin: 20px auto 40px auto;
+        padding: 20px;
+        border-left: 4px solid;
+        border-left-color: #5392e4;
+        background: rgba(83,146,228,0.1);
+        text-align: center;
+    }
+</style>

@@ -1,0 +1,119 @@
+﻿
+<div class='note' style="text-align: center;">
+    <p>
+       To run the code offline, please place your Open AI/Azure Open AI credentials in the controller.
+        This will allow you to explore the full functionality securely and at your own pace.
+    </p>
+</div>
+
+@section scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.2.2/pdf.js"></script>
+    <script>
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.2.2/pdf.worker.js';
+
+        function toggleAIPrompt(e) {
+            const wnd = $("#window").data("kendoWindow");
+            const wndWrapper = wnd.wrapper;
+            const position = e.event.target.getBoundingClientRect();
+
+            if (wnd.element.is(":visible")) {
+                wnd.close();
+            } else {
+                wnd.open();
+                wnd.wrapper.css({
+                    top: position.y + wndWrapper.height() / 2,
+                    left: position.x
+                });
+            }
+        }
+
+        function getPdfText() {
+            const newPageSeparator = "--- NEW PAGE ---"
+            return $("#pdfviewer .k-page").map((_, t) => t.textContent + newPageSeparator).toArray().join();
+        }
+
+        async function generateSuggestions() {
+            const text = getPdfText();
+            const suggestions = await $.ajax({
+                method: "POST",
+                url: "/CoreLab/GenerateSuggestions",
+                data: {
+                    text
+                }
+            });
+            const aiprompt = $("#aiprompt").data("kendoAIPrompt");
+
+            aiprompt.options.promptSuggestions = suggestions;
+            aiprompt._initViews();
+        }
+
+        async function onPromptRequest(e) {
+            kendo.ui.progress($("#window"), true)
+            const text = getPdfText();
+            const response = await $.ajax({
+                method: "POST",
+                url: "/CoreLab/AnswerQuestion",
+                data: {
+                    text,
+                    question: e.prompt
+                }
+            });
+            const output = {
+                id: kendo.guid(),
+                output: response.answer,
+                prompt: e.prompt,
+                isRetry: e.isRetry,
+            };
+
+            this.addPromptOutput(output);
+            this.activeView(1);
+            kendo.ui.progress($("#window"), false)
+        }
+
+        let counter = 0;
+        async function onRender(e) {
+            counter += 1;
+
+            if (counter >= this.document.pages.length) {
+                await generateSuggestions();
+                $("#ai-button").data("kendoButton").enable();
+            }
+        }
+
+    </script>
+}
+<div style="display: flex; justify-content:center;">
+    <div id="example">
+        @(
+            Html.Kendo().PDFViewer().Name("pdfviewer")
+            .PdfjsProcessing(pdf => pdf.File(Url.Content("~/sample.pdf")))
+            .Height(1200)
+            .Toolbar(t => t.Items(i => i.Add().Text("AI Assistant").Click("toggleAIPrompt").Type("button").Enable(false).HtmlAttributes(new { id = "ai-button" })))
+            .Events(e => e.Render("onRender"))
+            .Height(700)
+            )
+
+        @(Html.Kendo().Window().Name("window").Content(@<text>
+        @(Html.Kendo().AIPrompt().Name("aiprompt")
+        .HtmlAttributes(new { style = "width:500px" })
+        .Events(e=> e.PromptRequest("onPromptRequest")))
+
+    </text>)
+            .Visible(false)
+            .Height(500))
+
+    </div>
+</div>
+
+<style>
+    .note {
+        font: normal 18px "Metric";
+        border-radius: 2px;
+        margin: 20px auto 40px auto;
+        padding: 20px;
+        border-left: 4px solid;
+        border-left-color: #5392e4;
+        background: rgba(83,146,228,0.1);
+        text-align: center;
+    }
+</style>
