@@ -2,7 +2,8 @@
 
 Telerik Smart(AI) Components make it easy to add AI-powered features to your .NET applications without extra effort. Smart(AI) Components are currently in an **experimental phase** and are available for [Telerik UI for Blazor](https://www.telerik.com/blazor-ui), [Telerik UI for ASP.NET Core](https://www.telerik.com/aspnet-core-ui), and [Telerik UI for WPF](https://www.telerik.com/products/wpf/overview.aspx).
 
-> **NOTE:** We are looking to expand the use cases for AI-powered components and highly value your input on their usefulness and potential applications. Please share your thoughts and suggestions at the following link: [Insert Link Here].
+### 🚀 Your feedback matters
+We are looking to expand the use cases for AI-powered components and highly value your input on their usefulness and potential applications. Please share your thoughts and suggestions at the following link: [Insert Link Here].
 
 The source code for the experiments is currently available in the repository under the following folders:
 - [Telerik UI for Blazor](https://github.com/telerik/telerik-smartai-components/tree/master/blazor)
@@ -32,6 +33,7 @@ To submit a pull request, you should first fork the [repo](https://github.com/te
 ## Licensing
 Telerik is a commercial UI library. To use the components, you need to either register for a free trial or purchase a license.
 
-The 30-day free trial can be obtained from the [Telerik DevCraft product page](https://www.telerik.com/devcraft) and gives you access to all Telerik components and their full functionality. For more information regarding the available license and bundle options, you can review the [product pricing page](https://www.telerik.com/purchase).
+- 30-Day Free Trial: Obtain a free trial from the [Telerik DevCraft product page](https://www.telerik.com/devcraft) to access all Telerik components and their full functionality.
+- Licensing Options: For detailed information on available licenses and bundle options, visit our [product pricing page](https://www.telerik.com/purchase).
 
 For both active trialists and license holders, you get access to our legendary technical support provided directly by the Telerik dev team!
