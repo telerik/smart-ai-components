@@ -59,6 +59,12 @@ namespace SmartRichTextBox
         private void Timer_Tick(object sender, EventArgs e)
         {
             string question = GetCurrentText();
+
+            if(string.IsNullOrWhiteSpace(question))
+            {
+                return;
+            }
+
             string answer = AnswerQuestion(question);
             Debug.WriteLine(question);
             Debug.WriteLine(answer);
@@ -85,13 +91,14 @@ namespace SmartRichTextBox
         private void RadRichTextBox_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if(e.Key == System.Windows.Input.Key.Tab)
-            {
-                e.Handled = true;
-
+            { 
                 Paragraph p = radRichTextBox.Document.CaretPosition.GetCurrentParagraph();
                 Span span = p.Inlines.OfType<Span>().Where(s => s.ForeColor == Colors.LightGray).LastOrDefault();
+
                 if(span != null)
                 {
+                    e.Handled = true;
+
                     span.ForeColor = Colors.Black;
                     radRichTextBox.UpdateEditorLayout();
                     radRichTextBox.Document.CaretPosition.MoveToDocumentElementEnd(p);
