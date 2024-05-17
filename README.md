@@ -1,4 +1,4 @@
-# telerik-smartai-components
+# Telerik Smart (AI) Components
 
 Telerik Smart(AI) Components make it easy to add AI-powered features to your .NET applications without extra effort. Smart(AI) Components are currently in an **experimental phase** and are available for [Telerik UI for Blazor](https://www.telerik.com/blazor-ui), [Telerik UI for ASP.NET Core](https://www.telerik.com/aspnet-core-ui), [Telerik UI for WPF](https://www.telerik.com/products/wpf/overview.aspx), and [Telerik UI for WinForms](https://www.telerik.com/products/winforms.aspx).
 
