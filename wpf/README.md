@@ -15,10 +15,10 @@ If you want to use different AI Service, you will need to rewrite the `CallOpenA
 
 #### Consideration before using in production
 Keep in mind, that for the purpose of the demo, 
-- We send the whole document document to provide context for the service.
+- We send the whole document to provide context for the service.
 
 ### Spreadsheet
-The Spreadsheet example creates a custom functions that contains specific questions. We use this questions to ask the the Open AI service for answers based on some context that is provided. The result may no be exactly the same when running the example several times.  
+The Spreadsheet example creates a custom functions that contains specific questions. We use these questions to ask the the Open AI service for answers based on some context that is provided. The result may no be exactly the same when running the example several times.  
  
 #### How to run
 To run the Spreadsheet demo, replace your Azure/Open AI credentials inside `MainWindow.xaml.cs` file, then run the project and copy the AI formulas in the subsequent cells and wait for the service to provide the angers. 
