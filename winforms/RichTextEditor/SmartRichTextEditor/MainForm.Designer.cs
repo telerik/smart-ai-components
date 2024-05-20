@@ -44,16 +44,16 @@
             this.radRichTextEditorRuler1.AssociatedRichTextBox = this.radRichTextSmartEditor;
             this.radRichTextEditorRuler1.Controls.Add(this.radRichTextSmartEditor);
             this.radRichTextEditorRuler1.Dock = DockStyle.Fill;
-            this.radRichTextEditorRuler1.Location = new Point(0, 174);
+            this.radRichTextEditorRuler1.Location = new Point(0, 225);
             this.radRichTextEditorRuler1.Name = "radRichTextEditorRuler1";
-            this.radRichTextEditorRuler1.Size = new Size(985, 529);
+            this.radRichTextEditorRuler1.Size = new Size(768, 475);
             this.radRichTextEditorRuler1.TabIndex = 3;
             // 
             // radRichTextSmartEditor
             // 
             this.radRichTextSmartEditor.Location = new Point(29, 29);
             this.radRichTextSmartEditor.Name = "radRichTextSmartEditor";
-            this.radRichTextSmartEditor.Size = new Size(955, 499);
+            this.radRichTextSmartEditor.Size = new Size(738, 445);
             this.radRichTextSmartEditor.TabIndex = 0;
             // 
             // richTextEditorRibbonBar1
@@ -61,7 +61,7 @@
             this.richTextEditorRibbonBar1.AssociatedRichTextEditor = this.radRichTextSmartEditor;
             this.richTextEditorRibbonBar1.Location = new Point(0, 0);
             this.richTextEditorRibbonBar1.Name = "richTextEditorRibbonBar1";
-            this.richTextEditorRibbonBar1.Size = new Size(985, 174);
+            this.richTextEditorRibbonBar1.Size = new Size(768, 225);
             this.richTextEditorRibbonBar1.TabIndex = 1;
             this.richTextEditorRibbonBar1.TabStop = false;
             this.richTextEditorRibbonBar1.Text = "MainForm";
@@ -75,7 +75,7 @@
             this.AutoScaleBaseSize = new Size(7, 15);
             this.AutoScaleDimensions = new SizeF(7F, 15F);
             this.AutoScaleMode = AutoScaleMode.Font;
-            this.ClientSize = new Size(985, 703);
+            this.ClientSize = new Size(768, 700);
             this.Controls.Add(this.radRichTextEditorRuler1);
             this.Controls.Add(this.richTextEditorRibbonBar1);
             this.FormBehavior = this.radRibbonFormBehavior1;
