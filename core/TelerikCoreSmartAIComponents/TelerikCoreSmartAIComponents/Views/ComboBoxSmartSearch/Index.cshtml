@@ -1,0 +1,37 @@
+﻿
+<div class='note' style="text-align: center;">
+    <p>Try typing <strong>"pasta"</strong>, <strong>"sausage"</strong>, or <strong>"fruit"</strong> in the combobox to see how our smart search works in action!</p>
+
+    @(Html.Kendo().ComboBox()
+        .Name("products")
+        .Placeholder("Select product")
+        .DataTextField("ProductName")
+        .DataValueField("ProductId")
+        .HtmlAttributes(new { style = "width:350px" })
+        .Filter(FilterType.Contains)
+        .AutoBind(false)
+        .MinLength(3)
+        .DataSource(source =>
+        {
+            source.Read(read =>
+            {
+                read.Action("Read", "ComboBoxSmartSearch");
+            })
+            .ServerFiltering(true);
+        })
+        )
+</div>
+
+
+<style>
+    .note {
+        font: normal 18px "Metric";
+        border-radius: 2px;
+        margin: 20px auto 40px auto;
+        padding: 20px;
+        border-left: 4px solid;
+        border-left-color: #5392e4;
+        background: rgba(83,146,228,0.1);
+        text-align: center;
+    }
+</style>
