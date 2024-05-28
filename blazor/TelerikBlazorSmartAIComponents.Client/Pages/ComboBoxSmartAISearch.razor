@@ -61,6 +61,7 @@
         using var embedder = new LocalEmbedder();
         var queryVector = embedder.Embed(query);
 
+        // Uncomment this to see the similarity numbers of each of your items. This may help you to fine-tune the threshold number.
         // foreach (var item in AllData)
         // {
         //     var embeddings = ProductEmbeddings[item.ProductId];
