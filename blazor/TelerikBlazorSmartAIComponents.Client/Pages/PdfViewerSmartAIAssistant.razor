@@ -97,7 +97,8 @@
             PageEmbeddings = chunks.Select(x => KeyValuePair.Create(x, embedder.Embed(x))).ToDictionary(k => k.Key, v => v.Value);
             var questionsJson = await CallOpenAIApi(
                                                 @"You are a helpful assistant. Your task is to analyze the provided text and generate 3 short diverse questions.
-            The questions should be returned in form of a string array in a valid JSON format. Return only the JSON and nothing else.",
+The questions should be returned in form of a string array in a valid JSON format. Return only the JSON and nothing else without markdown code formatting.
+Example output: [""Question 1"", ""Question 2"", ""Question 3""]",
                 AllTextContent);
 
             PromptSuggestions = System.Text.Json.JsonSerializer.Deserialize<List<string>>(questionsJson);
@@ -127,12 +128,12 @@
 
         var chatCompletionsOptions = new ChatCompletionsOptions()
             {
-                DeploymentName = "DEPLOYMENT_NAME",
+                DeploymentName = "gpt-4o-mini",
                 Messages =
-            {
-                new ChatRequestSystemMessage(systemPrompt),
-                new ChatRequestUserMessage(message),
-            }
+                {
+                    new ChatRequestSystemMessage(systemPrompt),
+                    new ChatRequestUserMessage(message),
+                }
         };
 
         Response<ChatCompletions> response = await client.GetChatCompletionsAsync(chatCompletionsOptions);
