@@ -6,7 +6,7 @@ The project showcases 2 demos.
 2. Spreadsheet Smart (AI) Function
 
 ### RichTextBox
-RichTextbox demo uses on OpenAI service to return a suggestion according to the the text in the current paragraph and the provided context. 
+RichTextbox demo uses an OpenAI service to return a suggestion according to the the text in the current paragraph and the provided context. 
 
 #### How to run
 To run the RichTextBox demo, replace your Azure/Open AI credentials inside `MainWindow.xaml.cs` file, then run the project and type something then wait for a response (it will appear as a grey text).
