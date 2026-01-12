@@ -1,11 +1,12 @@
 # Telerik UI for .NET MAUI Smart Components
 
 1. DataGrid Semantic (AI) Search
+2. SpeechToTextButton OpenAI Whisper-1 Integration
 
-### Smart Search
+### DataGrid Smart Search
 The DataGrid search demo rely on similarity search to calculate the vector distance between the search term and the data items using the SmartComponents.LocalEmbeddings package. The solution works great with small to medium amounts of data.
 
-## How to Build the Solutions
+#### How to Build the Solutions
 
 1. Clone the repository on your machine.
 1. Install **Telerik UI for .NET MAUI** - you can download it from [here](https://www.telerik.com/maui-ui).
@@ -25,3 +26,10 @@ The DataGrid search demo rely on similarity search to calculate the vector dista
 You can find the official Telerik UI for .NET MAUI documentation at https://docs.telerik.com/devtools/maui/introduction.
 
 We would love to hear your feedback, so should you have any questions and/or comments, please share them in our [Telerik UI for .NET MAUI Feedback Portal](https://feedback.telerik.com/maui).
+
+### SpeechToTextButton OpenAI Whisper-1 Integration
+The SpeechToTextButton exposes API for plugging in a custom speech-recognizer instance. We utilize that extensibility point to integrate with OpenAI Whisper-1 model for speech-to-text transcription.
+Location - [STTB_Whisper.slnx](/maui/SpeechToTextButtonWithOpenAIWhisper/STTB_Whisper.slnx)
+
+#### How to run
+To run the demo, provide your Open AI credentials inside `WhisperAudioTranscriber.cs` file (string apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");), then run the project. Press the button to start recording, speak into the microphone, then press the button to stop recording, and the text will appear shortly in the Editor.
