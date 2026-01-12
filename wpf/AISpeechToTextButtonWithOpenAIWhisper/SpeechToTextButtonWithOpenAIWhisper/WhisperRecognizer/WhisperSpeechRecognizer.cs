@@ -177,7 +177,7 @@ internal class WhisperSpeechRecognizer : IRadSpeechRecognizer
 
     private void AudioRecorder_AudioRecorded(object sender, AudioRecordedEventArgs args)
     {
-        //if (!this.initContext.IsContinuousRecognition)
+        if (!this.initContext.IsContinuousRecognition)
         {
             return;
         }
