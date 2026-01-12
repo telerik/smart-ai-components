@@ -12,10 +12,7 @@
     <PackageReference Include="NAudio" Version="2.2.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.5-beta1" />
     <PackageReference Include="OpenAI" Version="2.8.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Telerik.UI.for.Wpf.80" Version="2025.4.1312" />
   </ItemGroup>
-  
+
 </Project>
