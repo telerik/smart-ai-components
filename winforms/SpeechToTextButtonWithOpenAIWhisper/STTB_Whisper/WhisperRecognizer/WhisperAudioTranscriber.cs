@@ -35,8 +35,4 @@ internal class WhisperAudioTranscriber : ITranscribeAudio
 
         return transcription.Text;
     }
-
-    public void Dispose()
-    {
-    }
 }

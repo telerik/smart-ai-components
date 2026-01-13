@@ -6,12 +6,8 @@ namespace SpeechToTextButtonWithOpenAIWhisper;
 internal class WhisperSpeechRecognizer : IRadSpeechRecognizer
 {
     private SpeechRecognizerState state;
-    private SpeechRecognizerInitializationContext initContext;
     private IRecordAudio audioRecorder;
-    private DateTime lastTimeAudioSentForTranscription;
-    private DateTime lastTimeTranscriptionReceived;
     private ITranscribeAudio audioTranscriber = null;
-    private string lastReportedText;
 
     public SpeechRecognizerState State
     {
@@ -32,8 +28,6 @@ internal class WhisperSpeechRecognizer : IRadSpeechRecognizer
 
     public Task Init(SpeechRecognizerInitializationContext context)
     {
-        this.initContext = context;
-
         if (this.State != SpeechRecognizerState.NotInitialized)
         {
             this.RaiseError("Can only initialize the recognizer if it is in a NotInitialized state.");
@@ -55,10 +49,6 @@ internal class WhisperSpeechRecognizer : IRadSpeechRecognizer
         }
 
         this.audioRecorder = new NAudioRecorder();
-        this.audioRecorder.AudioRecorded += this.AudioRecorder_AudioRecorded;
-        this.lastReportedText = string.Empty;
-        this.lastTimeAudioSentForTranscription = DateTime.Now;
-        this.lastTimeTranscriptionReceived = DateTime.Now;
         bool canRecordAudio = await this.audioRecorder.CanRecordAudio();
 
         if (canRecordAudio == false)
@@ -170,53 +160,12 @@ internal class WhisperSpeechRecognizer : IRadSpeechRecognizer
     {
         if (this.audioRecorder != null)
         {
-            this.audioRecorder.AudioRecorded -= this.AudioRecorder_AudioRecorded;
             this.audioRecorder = null;
-        }
-    }
-
-    private void AudioRecorder_AudioRecorded(object sender, AudioRecordedEventArgs args)
-    {
-        if (!this.initContext.IsContinuousRecognition)
-        {
-            return;
-        }
-
-        // Important note:
-        // OpenAI whisper-1 does not support live transcribe natively, so we send the audio every 0.5 seconds to get some feeling of real-time transcription.
-        // Keep in mind that this will increase the used minutes.
-
-        DateTime now = DateTime.Now;
-        TimeSpan elapsed = now - this.lastTimeAudioSentForTranscription;
-
-        if (0.5 < elapsed.Seconds)
-        {
-            this.lastTimeAudioSentForTranscription = now;
-            DateTime timeOfSending = now;
-            Stream audioStream = args.CopyCurrentAudioStream();
-            ITranscribeAudio localAudioTranscriber = this.audioTranscriber;
-
-            localAudioTranscriber?.TranscribeAsync(audioStream).ContinueWith(t =>
-            {
-                if (!t.IsFaulted && this.audioTranscriber == localAudioTranscriber && this.lastTimeTranscriptionReceived < timeOfSending)
-                {
-                    this.lastTimeTranscriptionReceived = timeOfSending;
-                    this.RaiseSpeechRecognized(t.Result);
-                }
-
-                audioStream.Dispose();
-            });
         }
     }
 
     private void RaiseSpeechRecognized(string text)
     {
-        var h = this.SpeechRecognized;
-
-        if (h != null && this.lastReportedText != text)
-        {
-            this.lastReportedText = text;
-            h.Invoke(this, new SpeechRecognizerSpeechRecognizedEventArgs(text));
-        }
+        this.SpeechRecognized?.Invoke(this, new SpeechRecognizerSpeechRecognizedEventArgs(text));
     }
 }

@@ -10,8 +10,6 @@ internal class NAudioRecorder : IRecordAudio
     private WaveFileWriter waveWriter;
     private MemoryStream audioStream;
 
-    public event EventHandler<AudioRecordedEventArgs> AudioRecorded;
-
     public Task<bool> CanRecordAudio()
     {
         return Task.FromResult(true);
@@ -87,19 +85,7 @@ internal class NAudioRecorder : IRecordAudio
             {
                 this.waveWriter.Write(e.Buffer, 0, e.BytesRecorded);
                 this.waveWriter.Flush();
-                this.AudioRecorded?.Invoke(this, new AudioRecordedEventArgs(this.CopyCurrentAudioStream));
             }
         }
-    }
-
-    private Stream CopyCurrentAudioStream()
-    {
-        long savePosition = this.audioStream.Position;
-        this.audioStream.Position = 0;
-        MemoryStream copyStream = new MemoryStream();
-        this.audioStream.CopyTo(copyStream);
-        this.audioStream.Position = savePosition;
-        copyStream.Position = 0;
-        return copyStream;
     }
 }
