@@ -30,7 +30,7 @@ If you want to use different AI Service, you will need to rewrite the `CallOpenA
 
 ### SpeechToTextButton OpenAI Whisper-1 Integration
 The SpeechToTextButton exposes API for plugging in a custom speech-recognizer instance. We utilize that extensibility point to integrate with OpenAI Whisper-1 model for speech-to-text transcription.
-Location - [SpeechToTextButtonWithOpenAIWhisper.slnx](/wpf/AISpeechToTextButtonWithOpenAIWhisper/SpeechToTextButtonWithOpenAIWhisper.slnx)
+Location - [STTB_Whisper.slnx](/wpf/AISpeechToTextButtonWithOpenAIWhisper/STTB_Whisper.slnx)
 
 #### How to run
 To run the demo, provide your Open AI credentials inside `WhisperAudioTranscriber.cs` file (string apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");), then run the project. Press the button to start recording, speak into the microphone, then press the button to stop recording, and the text will appear shortly in the TextBox.
