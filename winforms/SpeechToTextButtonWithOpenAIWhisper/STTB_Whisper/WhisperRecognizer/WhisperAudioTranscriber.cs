@@ -6,7 +6,6 @@ namespace SpeechToTextButtonWithOpenAIWhisper;
 internal class WhisperAudioTranscriber : ITranscribeAudio
 {
     private readonly OpenAIClient openAiClient;
-    private readonly object lockObject = new object();
 
     public WhisperAudioTranscriber()
     {
