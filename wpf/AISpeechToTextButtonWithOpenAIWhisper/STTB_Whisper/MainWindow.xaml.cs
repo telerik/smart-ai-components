@@ -12,8 +12,7 @@ public partial class MainWindow : Window
 
     public MainWindow()
     {
-        this.InitializeComponent();
-        
+        this.InitializeComponent();        
         this.speechToTextButton.SpeechRecognizerCreator = () => new WhisperSpeechRecognizer();
     }
 
@@ -50,12 +49,12 @@ public partial class MainWindow : Window
         this.lastFullText = args.FullText;
     }
 
-    private void TextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+    private void TextBox_SelectionChanged(object sender, RoutedEventArgs e)
     {
         if (!this.isInternalCursorPositionChange)
         {
-            this.originCursorPosition = this.textBox.CaretIndex;
-            this.cutOffTextLength = this.lastFullText?.Length ?? -1;
+            originCursorPosition = this.textBox.CaretIndex;
+            cutOffTextLength = this.lastFullText?.Length ?? -1;
         }
     }
 

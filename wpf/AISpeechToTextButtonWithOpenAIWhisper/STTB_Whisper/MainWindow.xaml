@@ -13,7 +13,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TextBox x:Name="textBox" TextChanged="TextBox_TextChanged" />
+        <TextBox x:Name="textBox" SelectionChanged="TextBox_SelectionChanged" />
         <telerik:RadSpeechToTextButton x:Name="speechToTextButton"
                                        IsContinuousRecognition="False"
                                        ErrorOccurred="SpeechToTextButton_ErrorOccurred"
