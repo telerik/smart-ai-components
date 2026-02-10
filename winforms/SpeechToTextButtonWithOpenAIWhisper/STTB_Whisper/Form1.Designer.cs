@@ -28,50 +28,83 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.speechToTextButton = new Telerik.WinControls.UI.RadSpeechToTextButton();
-            this.textBox1 = new TextBox();
-            this.SuspendLayout();
+            textBoxControl = new Telerik.WinControls.UI.RadTextBoxControl();
+            speechToTextButton = new Telerik.WinControls.UI.RadSpeechToTextButton();
+            panel1 = new Panel();
+            panel2 = new Panel();
+            ((System.ComponentModel.ISupportInitialize)textBoxControl).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)speechToTextButton).BeginInit();
+            panel1.SuspendLayout();
+            panel2.SuspendLayout();
+            SuspendLayout();
+            // 
+            // textBoxControl
+            // 
+            textBoxControl.AcceptsReturn = true;
+            textBoxControl.Dock = DockStyle.Fill;
+            textBoxControl.Location = new Point(0, 0);
+            textBoxControl.Margin = new Padding(0);
+            textBoxControl.Name = "textBoxControl";
+            textBoxControl.Size = new Size(512, 232);
+            textBoxControl.TabIndex = 0;
+            textBoxControl.SelectionChanged += TextBoxControl_SelectionChanged;
             // 
             // speechToTextButton
             // 
-            this.speechToTextButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            this.speechToTextButton.Location = new Point(736, 386);
-            this.speechToTextButton.Name = "speechToTextButton";
-            this.speechToTextButton.Size = new Size(52, 52);
-            this.speechToTextButton.TabIndex = 0;
-            this.speechToTextButton.Text = "start";
-            this.speechToTextButton.UseVisualStyleBackColor = true;
-            this.speechToTextButton.IsContinuousRecognition = false;
-            this.speechToTextButton.ErrorOccurred += this.SpeechToTextButton_ErrorOccurred;
-            this.speechToTextButton.StateChanged += this.SpeechToTextButton_StateChanged;
-            this.speechToTextButton.SpeechRecognized += this.SpeechToTextButton_SpeechRecognized;
+            speechToTextButton.Dock = DockStyle.Right;
+            speechToTextButton.Location = new Point(444, 0);
+            speechToTextButton.Margin = new Padding(0);
+            speechToTextButton.Name = "speechToTextButton";
+            speechToTextButton.IsContinuousRecognition = false;
+            speechToTextButton.RootElement.UseDefaultDisabledPaint = false;
+            speechToTextButton.Size = new Size(68, 47);
+            speechToTextButton.TabIndex = 0;
+            speechToTextButton.ErrorOccurred += SpeechToTextButton_ErrorOccurred;
+            speechToTextButton.SpeechRecognized += SpeechToTextButton_SpeechRecognized;
+            speechToTextButton.StateChanged += SpeechToTextButton_StateChanged;
             // 
-            // textBox1
+            // panel1
             // 
-            this.textBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            this.textBox1.Location = new Point(12, 12);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new Size(776, 368);
-            this.textBox1.TabIndex = 1;
-            this.textBox1.TextChanged += this.TextBox1_TextChanged;
+            panel1.Controls.Add(textBoxControl);
+            panel1.Dock = DockStyle.Fill;
+            panel1.Location = new Point(10, 10);
+            panel1.Name = "panel1";
+            panel1.Padding = new Padding(0, 0, 0, 4);
+            panel1.Size = new Size(512, 236);
+            panel1.TabIndex = 1;
+            // 
+            // panel2
+            // 
+            panel2.Controls.Add(speechToTextButton);
+            panel2.Dock = DockStyle.Bottom;
+            panel2.Location = new Point(10, 246);
+            panel2.Margin = new Padding(0);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(512, 47);
+            panel2.TabIndex = 0;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new SizeF(15F, 37F);
-            this.AutoScaleMode = AutoScaleMode.Font;
-            this.ClientSize = new Size(800, 450);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.speechToTextButton);
-            this.Name = "Form1";
-            this.Text = "Form1";
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleMode = AutoScaleMode.None;
+            ClientSize = new Size(532, 303);
+            Controls.Add(panel1);
+            Controls.Add(panel2);
+            Margin = new Padding(2);
+            Name = "Form1";
+            Padding = new Padding(10);
+            Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)textBoxControl).EndInit();
+            ((System.ComponentModel.ISupportInitialize)speechToTextButton).EndInit();
+            panel1.ResumeLayout(false);
+            panel2.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion
 
+        private Telerik.WinControls.UI.RadTextBoxControl textBoxControl;
         private Telerik.WinControls.UI.RadSpeechToTextButton speechToTextButton;
-        private TextBox textBox1;
+        private Panel panel2;
+        private Panel panel1;
     }
 }

@@ -20,7 +20,7 @@ public partial class Form1 : Form
     {
         if (this.speechToTextButton.State == SpeechRecognizerState.Listening)
         {
-            this.originCursorPosition = this.textBox1.SelectionStart;
+            this.originCursorPosition = this.textBoxControl.SelectionStart;
             this.lastFullText = null;
             this.cutOffTextLength = -1;
         }
@@ -28,9 +28,9 @@ public partial class Form1 : Form
 
     private void SpeechToTextButton_SpeechRecognized(object sender, SpeechRecognizerSpeechRecognizedEventArgs args)
     {
-        string editorText = this.textBox1.Text ?? string.Empty;
-        int start = Math.Min(this.originCursorPosition, this.textBox1.SelectionStart);
-        int end = Math.Max(this.originCursorPosition, this.textBox1.SelectionStart + this.textBox1.SelectionLength);
+        string editorText = this.textBoxControl.Text ?? string.Empty;
+        int start = Math.Min(this.originCursorPosition, this.textBoxControl.SelectionStart);
+        int end = Math.Max(this.originCursorPosition, this.textBoxControl.SelectionStart + this.textBoxControl.SelectionLength);
         string fullText = args.FullText;
 
         if (this.cutOffTextLength > 0)
@@ -42,18 +42,18 @@ public partial class Form1 : Form
         string newText = string.Concat(editorText.Substring(0, start), fullText, " ", editorText.Substring(end, editorText.Length - end));
 
         this.isInternalCursorPositionChange = true;
-        this.textBox1.Text = newText;
-        this.textBox1.SelectionStart = start + fullText.Length + 1;
+        this.textBoxControl.Text = newText;
+        this.textBoxControl.SelectionStart = start + fullText.Length + 1;
         this.isInternalCursorPositionChange = false;
 
         this.lastFullText = args.FullText;
     }
 
-    private void TextBox1_TextChanged(object sender, EventArgs e)
+    private void TextBoxControl_SelectionChanged(object sender, Telerik.WinControls.UI.SelectionChangedEventArgs e)
     {
         if (!this.isInternalCursorPositionChange)
         {
-            this.originCursorPosition = this.textBox1.SelectionStart;
+            this.originCursorPosition = this.textBoxControl.SelectionStart;
             this.cutOffTextLength = this.lastFullText?.Length ?? -1;
         }
     }
