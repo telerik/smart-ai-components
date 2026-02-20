@@ -14,6 +14,8 @@ public partial class Form1 : Form
         this.InitializeComponent();
 
         this.speechToTextButton.SpeechRecognizerCreator = () => new WhisperSpeechRecognizer();
+        this.textBoxControl.Multiline = true;
+        this.textBoxControl.WordWrap = true;
     }
 
     private void SpeechToTextButton_StateChanged(object sender, EventArgs args)

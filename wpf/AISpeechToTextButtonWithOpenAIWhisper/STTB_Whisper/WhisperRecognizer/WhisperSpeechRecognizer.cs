@@ -134,13 +134,12 @@ internal class WhisperSpeechRecognizer : IRadSpeechRecognizer
         this.State = SpeechRecognizerState.Ready;
     }
 
-    public ValueTask DisposeAsync()
+    public void Dispose()
     {
         this.State = SpeechRecognizerState.Disposing;
         this.audioRecorder?.StopAsync()?.Dispose();
         this.UnsetAudioRecorder();
         this.State = SpeechRecognizerState.Disposed;
-        return new ValueTask(Task.CompletedTask);
     }
 
     public Task Reset()
